@@ -1,0 +1,40 @@
+# Env
+/.env
+/vhost.conf
+
+# composer
+/vendor
+composer.phar
+
+# IDE
+.idea
+nbproject
+.buildpath
+.project
+.settings
+
+# windows thumbnail cache
+Thumbs.db
+
+# Mac DS_Store Files
+.DS_Store
+
+# phpunit
+phpunit.phar
+/phpunit.xml
+
+# Vagrant
+/.vagrant
+/vagrant.yaml
+
+
+
+# Sublime Text files
+sftp-config.json
+.remote-sync.json
+*.sublime-project
+*.sublime-workspace
+web/project
+web/.htaccess
+
+node/node_modules
