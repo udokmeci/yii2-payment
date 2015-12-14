@@ -9,21 +9,13 @@ use \app\models\order\TransactionCodes;
 
 class BasePaymentGateway extends \yii\base\Component
 {
-    private $translations=[];
-
-    const TEST_MODE = "testMode";
-    const REAL_MODE = "realMode";
-    public $mode;
-
-    const AUTH_TYPE = "Auth";
-    const PREAUTH_TYPE = "PreAuth";
-    private $type;
-
-
-
     public $requestIp;
     public $email;
     public $oid;
+
+
+
+    public $forceConversionTo=false;
 
     private $success=false;
     public $status=-1;
@@ -55,6 +47,9 @@ class BasePaymentGateway extends \yii\base\Component
 
     public function addAmount(Amount $amount)
     {
+        if($this->forceConversionTo){
+            $amount->convertTo($this->forceConversionTo);
+        }
         $this->amounts[]=$amount;
         return $this;
     }
@@ -68,7 +63,7 @@ class BasePaymentGateway extends \yii\base\Component
 
     public function setType($type)
     {
-        $this->type = $this->translate($type);
+        $this->type = $type;
         return $this;
     }
 
@@ -78,15 +73,9 @@ class BasePaymentGateway extends \yii\base\Component
         return $this;
     }
 
-    public function setOID($oid)
+    public function setOID($processID)
     {
-        $this->oid = $oid;
-        return $this;
-    }
-
-    public function setMode($mode)
-    {
-        $this->mode = $this->translate($mode);
+        $this->processID = $processID;
         return $this;
     }
 
@@ -94,10 +83,10 @@ class BasePaymentGateway extends \yii\base\Component
     {
         $res=null;
         $orderBy = new \yii\db\Expression('FIELD (locale_code, "' . implode('"," ', [\Yii::$app->language,'en-gb']) . '")');
-        if ($this->return_code) {
+        if ($this->status_code) {
             $res= TransactionCodesL10n::find()
                 ->select('description')
-                ->where(["transaction_code" => $this->return_code])
+                ->where(["transaction_code" => $this->status_code])
                 ->orderBy([$orderBy])
                 ->column();
         }
@@ -111,6 +100,7 @@ class BasePaymentGateway extends \yii\base\Component
             return $this->errors;
         }
     }
+
     public function getType()
     {
         return $this->type;
@@ -136,10 +126,10 @@ class BasePaymentGateway extends \yii\base\Component
 
     public function isSuccessfull()
     {
-        if ($this->return_code) {
+        if ($this->status_code) {
             $res = TransactionCodes::find()
                 ->select('successfull')
-                ->where(["code" => $this->return_code])
+                ->where(["code" => $this->status_code])
                 ->column();
             if ($res) {
                 return  $res[0] ;
@@ -153,16 +143,21 @@ class BasePaymentGateway extends \yii\base\Component
         return null;
     }
 
-    public function convertTo($to)
-    {
-        $res=ExchangeRates::convert($this->getTotal(), $this->currency->code, $to);
-        
-        if (!$res) {
-            return false;
-        }
-        $this->setCurrency(Currency::findOne($to));
-        $this->setTotal($res);
-        return $this;
+    public function getGrandTotal(){
+        $amountsSubTotal=[];
+        $amounts=[];
+        if($this->amount)
+            foreach ($this->amounts as $amount){
+                $amountsSubTotal[$amount->currency->code]+=$amount->total;
+            }
+        if($amountsSubTotal)
+            foreach ($amounts as $currency => $total){
+                $amounts[]=new Amount([
+                    'currency'=> Curency::findOne(['code'=>$currency]),
+                    'total'=>$total,
+                ]);
+            }
+        return $amounts;
     }
 
     

@@ -1,7 +1,7 @@
 <?php
 
 namespace udokmeci\yii2payment\models;
-
+use Yii;
 class CreditCard extends \yii\base\Model
 {
 
@@ -12,15 +12,20 @@ class CreditCard extends \yii\base\Model
     private $cardHolder="";
     private $bin=null;
 
-    public function rules()
-    {
-        return [
+    public static function ruleSet(){
+         return [
             [['cardHolder'], 'string'],
             [['expireMonth', 'expireYear','CCV2'], 'integer'],
-            ["creditCardNumber","\udokmeci\yii2payment\validators\CreditCardValidator","message"=>Yii::t('app', 'The credit card number you have entered seem not to be valid.')],
+            ["creditCardNumber","udokmeci\\yii2payment\\validators\\CreditCardValidator","message"=>Yii::t('app', 'The credit card number you have entered seem not to be valid.')],
             ["expireMonth","in","range"=>array_keys(self::getMonthOptions())],
             ["expireYear","in","range"=>array_keys(self::getYearOptions())],
-        ];
+            ];
+    }
+    public function rules()
+    {
+        return self::ruleSet();
+            
+        
     }
 
     public function setCCNO($creditCardNumber)
