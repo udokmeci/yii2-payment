@@ -3,7 +3,8 @@
 namespace udokmeci\yii2payment\models;
 
 use Yii;
-
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 /**
  * This is the model class for table "exchange_rates".
  *
@@ -13,6 +14,21 @@ use Yii;
  */
 class ExchangeRates extends \yii\db\ActiveRecord
 {
+
+   
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' =>TimestampBehavior::className(),
+                'createdAtAttribute' => false,
+                'updatedAtAttribute' => 'updated',
+                'value' => new Expression('NOW()'),
+            ]
+
+        ];
+    }
     /**
      * @inheritdoc
      */
@@ -36,6 +52,7 @@ class ExchangeRates extends \yii\db\ActiveRecord
     public static function convert($value,$from,$to,$fixed=false){
         $from_model = self::findOne($from);
         $to_model = self::findOne($to);
+
         if (!$from_model || !$to_model) 
             throw new \Exception("Unknown Currency Convertion", 1);
         $converted=$value * $to_model->rate / $from_model->rate;

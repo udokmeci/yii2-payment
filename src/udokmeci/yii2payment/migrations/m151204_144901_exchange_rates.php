@@ -7,39 +7,20 @@ class m151204_144901_exchange_rates extends Migration
 {
     public function up()
     {
-
-    }
-
-    public function down()
-    {
-        echo "m151204_144901_exchange_rates cannot be reverted.\n";
-
-        return false;
-    }
-
-<?php
-
-use yii\db\Schema;
-use yii\db\Migration;
-
-class m151204_144849_currency extends Migration
-{
-    public function up()
-    {
         $this->createTable('exchange_rates', [
-            'currency_code' => $this->string(5)->primaryKey(),
-            'rate' => $this->integer(),
-            'updated' => $this->string(5),
-            'E' => $this->integer()
+            'currency_code' => $this->string(5),
+            'rate' => $this->float(),
+            'updated' => $this->dateTime(),
+          
         ]);
-
-        $this->batchInsert('currency',['code' ,'no' ,'symbol' ,'E' ], $this->data());
+        $this->addPrimaryKey('exchange_rates_pm','exchange_rates','currency_code');
+        $this->batchInsert('exchange_rates',['currency_code' ,'rate' ,'updated'  ], $this->data());
 
     }
 
     public function down()
     {
-        $this->dropTable('currency');
+        $this->dropTable('exchange_rates');
 
         return false;
     }
@@ -224,6 +205,4 @@ class m151204_144849_currency extends Migration
 
     }
    
-}
-
 }

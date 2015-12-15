@@ -10,23 +10,12 @@ use Yii;
  * @property integer $E
  *
  */
-trait Currency 
+class Currency extends \yii\db\ActiveRecord
 {
-    public $code;
-    public $no;
-    public $symbol;
-    public $E;
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['code', 'no', 'E'], 'required'],
-            [['no', 'E'], 'integer'],
-            [['symbol'], 'string'],
-            [['code'], 'string', 'max' => 5]
-        ];
-    }
+    use CurrencyTrait;
 
+    public static function tableName()
+    {
+        return 'currency';
+    }
 }

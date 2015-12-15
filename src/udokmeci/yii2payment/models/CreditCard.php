@@ -14,6 +14,7 @@ class CreditCard extends \yii\base\Model
 
     public static function ruleSet(){
          return [
+            [['creditCardNumber','cardHolder','expireMonth','expireYear','CCV2'],'required'],
             [['cardHolder'], 'string'],
             [['expireMonth', 'expireYear','CCV2'], 'integer'],
             ["creditCardNumber","udokmeci\\yii2payment\\validators\\CreditCardValidator","message"=>Yii::t('app', 'The credit card number you have entered seem not to be valid.')],

@@ -5,6 +5,7 @@ use Yii;
 use yii\base\Action;
 use yii\web\Response;
 use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 use Exception;
 
 /**
@@ -12,7 +13,7 @@ use Exception;
 */
 class UpdateExchangeRatesAction extends Action
 {
-    public $exchangeRatesClass='';
+    public $exchangeRatesClass='udokmeci\yii2payment\models\ExchangeRates';
     public $file='latest.json';
     public $openExchangeAppID;
     public $update=false;
@@ -24,7 +25,8 @@ class UpdateExchangeRatesAction extends Action
 
         if($this->update)
             $this->updateRates();
-        return $exchangeRatesClass::find()->asArray()->all();
+
+        echo json_encode(ArrayHelper::map($exchangeRatesClass::find()->asArray()->all(),'currency_code','rate'));
     }
 
     public function updateRates(){
@@ -44,6 +46,8 @@ class UpdateExchangeRatesAction extends Action
         // Get the data:
         $json = curl_exec($ch);
         curl_close($ch);
+
+
 
         // Decode JSON response:
         $exchangeRates = json_decode($json);

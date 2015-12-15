@@ -8,11 +8,13 @@ class m151204_144849_currency extends Migration
     public function up()
     {
         $this->createTable('currency', [
-            'code' => $this->string(5)->primaryKey(),
+            'code' => $this->string(5),
             'no' => $this->integer(),
             'symbol' => $this->string(5),
             'E' => $this->integer()
         ]);
+
+        $this->addPrimaryKey('currency_pm','currency','code');
 
         $this->batchInsert('currency',['code' ,'no' ,'symbol' ,'E' ], $this->data());
 

@@ -12,5 +12,5 @@ use Yii;
  */
 class CurrencyModel extends \yii\base\Model
 {
-    use Curreny;
+    use CurrencyTrait;
 }

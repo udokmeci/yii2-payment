@@ -14,9 +14,8 @@ class CreditCardValidator extends Validator
 
     public function validateAttribute($model, $attribute)
     {
-        if ($model->paymentType!="CreditCard") return true;
         
-        $value = $model->$attribute;
+        $value = preg_replace('/\D/', '', $model->$attribute);
         if (!$this->checkLuhns($value)) {
             $model->addError($attribute, $this->message);
         }
