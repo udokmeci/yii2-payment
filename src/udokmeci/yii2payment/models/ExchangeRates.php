@@ -57,7 +57,7 @@ class ExchangeRates extends \yii\db\ActiveRecord
             throw new \Exception("Unknown Currency Convertion", 1);
         $converted=$value * $to_model->rate / $from_model->rate;
         if(!$fixed)
-            return $converted;
+            return floatval($converted);
         if($fixed)
             return number_format($converted,$to_model->currency->E);
 

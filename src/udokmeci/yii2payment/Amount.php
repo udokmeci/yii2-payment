@@ -14,13 +14,15 @@ class Amount extends \yii\base\Object
 	}
 
 	public function setTotal($total){
-		$this->total = $total;
+
+		$this->total = (float)($total);
         return $this;
 	}
 
     public function getTotal()
     {
-        return $this->total;
+    	
+        return (float)($this->total);
     }
 
     public function getCurrency()
@@ -31,7 +33,7 @@ class Amount extends \yii\base\Object
     public function convertTo($to)
     {
     	$currencyClass=$this->currency->className();
-    	
+
         $res=ExchangeRates::convert($this->getTotal(), $this->currency->code, $to);
         if (!$res) {
             return false;
@@ -49,7 +51,7 @@ class Amount extends \yii\base\Object
     {
         $this->currency = $currency;
 
-        $this->total = number_format($this->total, $this->currency->E, ".", "");
+        //$this->total = number_format($this->total, $this->currency->E, ".", "");
         return $this;
     }
 

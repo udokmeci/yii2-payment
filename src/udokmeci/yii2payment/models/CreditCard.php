@@ -5,18 +5,19 @@ use Yii;
 class CreditCard extends \yii\base\Model
 {
 
-    private $creditCardNumber="";
-    private $expireMonth="";
-    private $expireYear="";
-    private $CCV2="";
-    private $cardHolder="";
-    private $bin=null;
+    public $creditCardNumber="";
+    public $expireMonth="";
+    public $expireYear="";
+    public $CCV2="";
+    public $cardHolder="";
+    public $bin=null;
 
     public static function ruleSet(){
          return [
             [['creditCardNumber','cardHolder','expireMonth','expireYear','CCV2'],'required'],
             [['cardHolder'], 'string'],
             [['expireMonth', 'expireYear','CCV2'], 'integer'],
+            [['CCV2'], 'match','pattern'=>"/^\\d\\d\\d$/"],
             ["creditCardNumber","udokmeci\\yii2payment\\validators\\CreditCardValidator","message"=>Yii::t('app', 'The credit card number you have entered seem not to be valid.')],
             ["expireMonth","in","range"=>array_keys(self::getMonthOptions())],
             ["expireYear","in","range"=>array_keys(self::getYearOptions())],
@@ -28,6 +29,14 @@ class CreditCard extends \yii\base\Model
             
         
     }
+
+    public function getCCNO(){
+        return preg_replace("/[^\d]/", "", $this->creditCardNumber);
+    }
+    public function getCCVNO(){
+        return preg_replace("/[^\d]/", "", $this->CCV2);
+    }
+    
 
     public function setCCNO($creditCardNumber)
     {
