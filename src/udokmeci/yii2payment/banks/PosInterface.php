@@ -11,5 +11,5 @@ interface PosInterface
 	public function reset();
 	public function makeRequest();
 	public function process();
-	public function isSucessfull();
+	public function isSuccessful();
 }

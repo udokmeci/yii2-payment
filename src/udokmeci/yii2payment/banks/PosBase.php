@@ -80,11 +80,13 @@ class PosBase extends \yii\base\Component implements PosInterface
 		$this->_request=$this->prepareRequest();
 		$this->makeRequest();
 		$this->afterRequest();
-		return $this->isSucessfull();
+		$result= $this->isSuccessful();
+
+		return $result;
 	}
 
 	public function prepareRequest(){}
-	public function isSucessfull(){}
+	public function isSuccessful(){}
 	public function afterRequest(){}
 
 

@@ -21,13 +21,16 @@ class CreditCard extends \yii\base\Model
             ["creditCardNumber","udokmeci\\yii2payment\\validators\\CreditCardValidator","message"=>Yii::t('app', 'The credit card number you have entered seem not to be valid.')],
             ["expireMonth","in","range"=>array_keys(self::getMonthOptions())],
             ["expireYear","in","range"=>array_keys(self::getYearOptions())],
+
             ];
     }
+
     public function rules()
     {
         return self::ruleSet();
-            
-        
+    }
+    public function getExpireDate(){
+        return $this->_creditCard->expireYear . str_pad($this->_creditCard->expireMonth,2,'0', STR_PAD_LEFT);
     }
 
     public function getCCNO(){
