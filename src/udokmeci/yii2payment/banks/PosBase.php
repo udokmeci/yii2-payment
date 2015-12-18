@@ -70,13 +70,14 @@ class PosBase extends \yii\base\Component implements PosInterface
 		curl_setopt($this->_ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($this->_ch, CURLOPT_TIMEOUT, $this->timeout);
 		if(($this->_response=curl_exec($this->_ch) )=== false)
-			$this->errors[]=curl_error($this->_ch);
+			Yii::error(curl_error($this->_ch));
 		curl_close($this->_ch);
 	}
 
 
 	public function process()
 	{
+
 		$this->_request=$this->prepareRequest();
 		$this->makeRequest();
 		$this->afterRequest();
