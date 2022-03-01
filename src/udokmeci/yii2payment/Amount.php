@@ -3,7 +3,7 @@ namespace udokmeci\yii2payment;
 use Exception;
 use udokmeci\yii2payment\models\ExchangeRates;
 use udokmeci\yii2payment\models\Currency;
-class Amount extends \yii\base\Object
+class Amount extends \yii\base\BaseObject
 {        
 	public $total;
 	public $currency;
